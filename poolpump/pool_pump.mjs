@@ -67,7 +67,7 @@ function getSeasonAndHours(month) {
     return { season: "Winter", hours: 3 };
 }
 
-async function fetchTibberPricesAndGetSchedule(hours) {
+async function fetchTibberPricesAndGetSchedule(hours, willFreeze) {
     try {
         const response = await fetch("https://api.tibber.com/v1-beta/gql", {
             method: "POST",
@@ -75,10 +75,10 @@ async function fetchTibberPricesAndGetSchedule(hours) {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${TIBBER_TOKEN}`
             },
-            body: JSON.stringify({ query })
+            body: JSON.stringify({query})
         });
 
-        const { data } = await response.json();
+        const {data} = await response.json();
 
         if (!data?.viewer?.home?.currentSubscription?.priceInfo?.today) {
             console.error("Error: Tibber response is missing expected fields.");
@@ -87,9 +87,8 @@ async function fetchTibberPricesAndGetSchedule(hours) {
 
         let prices = data.viewer.home.currentSubscription.priceInfo.today;
 
-        // Filter out hours where price > MAX_PRICE
-        let validHours = prices.filter(p => p.total <= MAX_PRICE);
-
+        // Filter out hours where price > MAX_PRICE unless it's freezing
+        let validHours = willFreeze ? prices.filter(p => p.total <= MAX_PRICE) : prices;
         if (validHours.length === 0) {
             logMessage("No valid hours found below the price limit.");
             return;
@@ -221,7 +220,7 @@ logMessage('{ "name": "PUMP RUN TIME (h)", "value": "' + hours  + '"},');
 logMessage('{ "name": "FREEZE TODAY?", "value": "' + willFreeze  + '"}');
 logMessage("],");
 //4. FETCH SCHEDULE
-let schedule = await fetchTibberPricesAndGetSchedule(hours);
+let schedule = await fetchTibberPricesAndGetSchedule(hours, willFreeze);
 
 // Sort timestamps in order
 schedule.sort((a, b) => a.timestamp - b.timestamp);

@@ -11,7 +11,7 @@ public/ here are all html and javascript for the home automation frontend. Shoul
 
 BACKEND:
 
-server.js this is the main backend file. 
+server.js this is the main backend file. Executed with pm2 on raspberry pi.
 
 views/ here are templates (EJS) that are used to provide html to frontend.
 
