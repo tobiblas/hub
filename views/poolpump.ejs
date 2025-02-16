@@ -1,0 +1,21 @@
+<div class="poolpump">
+    <div class="data">Data - <%= jsonData.date %></div>
+    <ul>
+        <% jsonData.data.forEach(property => { %>
+            <li><strong><%= property.name %></strong>: <%= property.value %></li>
+        <% }); %>
+    </ul>
+    <div class="maincontent">
+        <ul>
+          <% jsonData.content.forEach(item => { %>
+            <li><%= item %></li>
+          <% }); %>
+        </ul>
+    </div>
+    <div class="header">Properties</div>
+    <ul>
+        <% jsonData.properties.forEach(property => { %>
+            <li><strong><%= property.name %></strong>: <%= property.value %></li>
+        <% }); %>
+    </ul>
+</div>

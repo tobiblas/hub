@@ -1,0 +1,8 @@
+# Ignore node_modules (dependencies installed via npm install)
+node_modules/
+
+.DS_Store
+
+.idea/
+
+poolpump/secrets.txt
