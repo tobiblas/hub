@@ -14,7 +14,7 @@ const MAX_PRICE = 2; // Don't turn on if price is above 2 kr
 const OPEN_WEATHER_API_KEY = readSecret("OPEN_WEATHER_API_KEY");
 const LATITUDE = 55.61024170239335;
 const LONGITUDE = 13.076425737606135;
-const LOG_FILE = "data.json";
+const LOG_FILE = path.join(__dirname, 'data.json');
 
 const query = `{
     viewer {
