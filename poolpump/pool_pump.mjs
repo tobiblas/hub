@@ -7,7 +7,7 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SHELLY_IP = "192.168.1.100";
+const SHELLY_IP = "192.168.1.216";
 const TIBBER_TOKEN = readSecret("TIBBER_TOKEN");
 const TIBBER_HOME_ID = readSecret("TIBBER_HOME_ID");
 const MAX_PRICE = 2; // Don't turn on if price is above 2 kr
@@ -210,7 +210,7 @@ logMessage('"properties": [');
 logMessage('{ "name": "SHELLY_IP", "value": "' + SHELLY_IP  + '"},');
 logMessage('{ "name": "TIBBER_TOKEN", "value": "' + TIBBER_TOKEN  + '"},');
 logMessage('{ "name": "TIBBER_HOME_ID", "value": "' + TIBBER_HOME_ID  + '"},');
-logMessage('{ "name": "MAX_PRICE (Don\'t turn on if price is above MAX_PRICE kr):", "value": "' + MAX_PRICE  + '"},');
+logMessage('{ "name": "MAX_PRICE (Don\'t turn on if price is above MAX_PRICE kr)", "value": "' + MAX_PRICE  + '"},');
 logMessage('{ "name": "OPEN_WEATHER_API_KEY", "value": "' + OPEN_WEATHER_API_KEY  + '"}');
 logMessage("],");
 //3. PRINT WEATHER DATA
