@@ -146,8 +146,7 @@ async function controlShelly(action) {
 
 // Function to schedule ON/OFF actions
 function scheduleShellyActions(schedule) {
-    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-    const now = Date.now() - timezoneOffset;
+    const now = Date.now();
 
     schedule.forEach(event => {
         let delay = event.timestamp - now;
