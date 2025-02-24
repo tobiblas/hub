@@ -1,10 +1,30 @@
-const Gpio = require('onoff').Gpio;
+const rpio = require('rpio');
 
-const RELAY_ON = 1;
-const RELAY_OFF = -1;
+rpio.init({ mapping: 'gpio' }); // Use BCM numbering
+
 const RELAY_GPIO_PIN = 4;
 
-const relay = new Gpio(RELAY_GPIO_PIN, 'out');
+// Open the pin without changing its state
+rpio.open(RELAY_GPIO_PIN, rpio.OUTPUT);
+
+// Read the current state
+const currentState = rpio.read(RELAY_GPIO_PIN);
+
+console.log("Current relay state:", currentState ? "OFF" : "ON");
+
+// Function to update relay state only if needed
+function setRelay(state) {
+    if (state !== currentState) {
+        rpio.write(RELAY_GPIO_PIN, state ? rpio.LOW : rpio.HIGH);
+        console.log("Relay switched", state ? "ON" : "OFF");
+    } else {
+        console.log("Relay state unchanged.");
+    }
+}
+
+setRelay(true); // Turn the relay ON
+// Example: Call setRelay(true) or setRelay(false) based on conditions
+
 
 // temp_home:/root
 // devices:Kitchen
@@ -18,22 +38,3 @@ const relay = new Gpio(RELAY_GPIO_PIN, 'out');
 // expensiveBreakpoint:-1.0
 // mediumExpensiveBreakpoint:-0.5
 
-function logStatus(fromVal, toVal, targetTemp, threshold) {
-    console.log(`Relay changed from ${fromVal} to ${toVal}`);
-    console.log(`Target Temp: ${targetTemp}, Threshold: ${threshold}`);
-}
-
-function setRelay(fromVal, toVal, targetTemp, threshold) {
-    logStatus(fromVal, toVal, targetTemp, threshold);
-    relay.writeSync(toVal === RELAY_ON ? 0 : 1);
-}
-
-// Example usage
-setRelay(-1, RELAY_ON, 22, 25, 2);
-
-// Cleanup on exit
-// process.on('SIGINT', () => {
-//     relay.unexport();
-//     console.log("GPIO cleanup done");
-//     process.exit();
-// });
