@@ -4,32 +4,18 @@ import { writeFileSync } from 'fs';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import {getElectricityPrice} from "../electricityPrice/getElectricityPrice.js";
+import {getProperty} from "../properties/properties.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SHELLY_IP = "192.168.1.216";
-const TIBBER_TOKEN = readSecret("TIBBER_TOKEN");
-const TIBBER_HOME_ID = readSecret("TIBBER_HOME_ID");
-const MAX_PRICE = 2; // Don't turn on if price is above 2 kr
+const MAX_PRICE = getProperty("maxPriceForPoolPump"); // Don't turn on if price is above 2 kr
 const OPEN_WEATHER_API_KEY = readSecret("OPEN_WEATHER_API_KEY");
 const LATITUDE = 55.61024170239335;
 const LONGITUDE = 13.076425737606135;
 const LOG_FILE = path.join(__dirname, 'data.json');
-
-const query = `{
-    viewer {
-        home(id: "${TIBBER_HOME_ID}") {
-            currentSubscription {
-                priceInfo {
-                    today {
-                        total
-                        startsAt
-                    }
-                }
-            }
-        }
-    }
-}`;
 
 function readSecret(key) {
     const filePath = path.join(__dirname, 'secrets.txt');
@@ -76,23 +62,8 @@ function getSeasonAndHours(month) {
 
 async function fetchTibberPricesAndGetSchedule(hours, willFreeze) {
     try {
-        const response = await fetch("https://api.tibber.com/v1-beta/gql", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${TIBBER_TOKEN}`
-            },
-            body: JSON.stringify({query})
-        });
 
-        const {data} = await response.json();
-
-        if (!data?.viewer?.home?.currentSubscription?.priceInfo?.today) {
-            logError("Error: Tibber response is missing expected fields.");
-            return;
-        }
-
-        let prices = data.viewer.home.currentSubscription.priceInfo.today;
+        let prices = await getElectricityPrice();
 
         // Filter out hours where price > MAX_PRICE unless it's freezing
         let validHours = willFreeze ? prices.filter(p => p.total <= MAX_PRICE) : prices;
@@ -212,8 +183,6 @@ clearLogFile();
 logMessage("{");
 logMessage('"properties": [');
 logMessage('{ "name": "SHELLY_IP", "value": "' + SHELLY_IP  + '"},');
-logMessage('{ "name": "TIBBER_TOKEN", "value": "' + TIBBER_TOKEN  + '"},');
-logMessage('{ "name": "TIBBER_HOME_ID", "value": "' + TIBBER_HOME_ID  + '"},');
 logMessage('{ "name": "MAX_PRICE (Don\'t turn on if price is above MAX_PRICE kr)", "value": "' + MAX_PRICE  + '"},');
 logMessage('{ "name": "OPEN_WEATHER_API_KEY", "value": "' + OPEN_WEATHER_API_KEY  + '"}');
 logMessage("],");

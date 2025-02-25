@@ -1,0 +1,6 @@
+targetTemp=21.7
+threshold=0.25
+
+maxPriceForPoolPump=2
+
+thermometerRaspberryIP=192.168.1.232

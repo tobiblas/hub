@@ -6,5 +6,5 @@ node_modules/
 .idea/
 hub.iml
 
-poolpump/secrets.txt
+properties/secrets.txt
 poolpump/data.json
