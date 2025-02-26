@@ -8,6 +8,7 @@ const THRESHOLD_PRICE_ULTRA_HIGH = 5;
 
 async function main() {
     const temperature = await getTemperature();
+    console.log("Current temperature:", temperature);
     if (temperature === null) {
         console.log("Error fetching temperature, turning relay ON for safety.");
         setRelay(true);
@@ -17,13 +18,14 @@ async function main() {
     const electricityPrice = await getElectricityPrice();
     let currentPrice = 0;
     if (electricityPrice === null) {
-        console.log("Error fetching electricity price, using last known value.");
+        console.log("Error fetching electricity price, will use 0 as current price");
     } else {
         //get current hour
         const now = new Date();
         const currentHour = now.getHours();
         currentPrice = electricityPrice[currentHour]?.total;
     }
+    console.log("Electricity price:", currentPrice);
 
     let threshold = getProperty("threshold");
     if (currentPrice > THRESHOLD_PRICE_HIGH && currentPrice < THRESHOLD_PRICE_ULTRA_HIGH) {
@@ -32,6 +34,7 @@ async function main() {
         threshold += 4;
     }
 
+    console.log("Threshold:", threshold);
     // Replace with actual logic for relay control
     const targetTemp = getProperty("targetTemp");
 
