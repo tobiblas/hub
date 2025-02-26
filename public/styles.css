@@ -6,6 +6,7 @@
     --tab-hover-bg: #edd7c9;
     --tab-active-underline: #c14b4b;
     --tab-bg-color: #fff;
+    --container-bg-color: #fff;
 }
 /* General Styles */
 body {
@@ -22,7 +23,7 @@ body {
 .container {
     width: 90%;
     max-width: 800px;
-    background: var(--tab-bg-color);
+    background: var(--container-bg-color);
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -79,7 +80,7 @@ body {
     font-size: 18px;
     font-weight: 400;
     line-height: 1.6;
-    background: var(--card-bg);
+    background: var(--container-bg-color);
     color: var(--text-color);
 }
 
@@ -116,6 +117,21 @@ body {
 }
 
 .poolpump li {
+    padding: 5px 0;
+    max-width: 100%; /* or specify a fixed width like 300px */
+
+    /* Allow text to wrap onto a new line */
+    white-space: normal;
+
+    /* Break long words that would otherwise overflow */
+    overflow-wrap: break-word; /* Standard */
+}
+
+.thermostat ul {
+    list-style-type: none;
+    padding: 0;
+}
+.thermostat li {
     padding: 5px 0;
     max-width: 100%; /* or specify a fixed width like 300px */
 

@@ -1,8 +1,8 @@
 <div class="thermostat">
-    <div class="data">Data - <%= jsonData.date %></div>
     <ul>
         <% jsonData.data.forEach(property => { %>
             <li><strong><%= property.name %></strong>: <%= property.value %></li>
         <% }); %>
     </ul>
+    <div class="thermostatdate">last update <%= jsonData.date %></div>
 </div>

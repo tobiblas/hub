@@ -26,6 +26,8 @@ async function main() {
     }
     temperature = temperature.toFixed(1);
     logMessage("indoorTemp", temperature);
+    const targetTemp = getProperty("targetTemp");
+    logMessage("targetTemp", targetTemp);
     const electricityPrice = await getElectricityPrice();
     let currentPrice = 0;
     if (electricityPrice === null) {
@@ -44,9 +46,7 @@ async function main() {
     } else if (currentPrice >= THRESHOLD_PRICE_ULTRA_HIGH) {
         threshold += 4;
     }
-
     logMessage("threshold", threshold);
-    const targetTemp = getProperty("targetTemp");
 
     if (temperature < targetTemp - threshold) {
         setRelay(true);
@@ -86,7 +86,8 @@ async function run() {
     logMessageData("{");
     logMessageData('"data": [');
     await main();
-    logMessageData("]}");
+    logMessageData("],");
+    logMessageData('"date": "' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '"}');
 }
 
 run().catch(err => {
