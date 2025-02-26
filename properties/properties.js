@@ -11,7 +11,6 @@ function getProperty(key, secret) {
             return v;
         }
     }
-
 }
 
 module.exports = { getProperty };

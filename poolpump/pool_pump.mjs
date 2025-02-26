@@ -12,23 +12,11 @@ const __dirname = path.dirname(__filename);
 
 const SHELLY_IP = "192.168.1.216";
 const MAX_PRICE = getProperty("maxPriceForPoolPump"); // Don't turn on if price is above 2 kr
-const OPEN_WEATHER_API_KEY = readSecret("OPEN_WEATHER_API_KEY");
+const OPEN_WEATHER_API_KEY = getProperty("OPEN_WEATHER_API_KEY", true);
 const LATITUDE = 55.61024170239335;
 const LONGITUDE = 13.076425737606135;
 const LOG_FILE = path.join(__dirname, 'data.json');
 
-function readSecret(key) {
-    const filePath = path.join(__dirname, 'secrets.txt');
-    const data = fs.readFileSync(filePath, 'utf8');
-    const lines = data.split('\n');
-    for (let line of lines) {
-        const [k, v] = line.split('=');
-        if (k === key) {
-            return v;
-        }
-    }
-
-}
 function clearLogFile() {
     try {
         writeFileSync(LOG_FILE, '', 'utf8');
