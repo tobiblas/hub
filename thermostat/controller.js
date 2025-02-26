@@ -2,30 +2,41 @@ const { getTemperature } = require('./getTemperature');
 const { getElectricityPrice } = require('../electricityPrice/getElectricityPrice');
 const { setRelay } = require('./relayController');
 const { getProperty } = require('../properties/properties');
+const { writeFileSync, appendFileSync} = require("fs");
+const path = require("path");
 
 const THRESHOLD_PRICE_HIGH = 2;
 const THRESHOLD_PRICE_ULTRA_HIGH = 5;
+const DATA_FILE = path.join(__dirname, 'data.json');
+
+function clearLogFile() {
+    try {
+        writeFileSync(DATA_FILE, '', 'utf8');
+    } catch (err) {
+        logError('Error clearing log file:', err);
+    }
+}
 
 async function main() {
-    const temperature = await getTemperature();
-    console.log("Current temperature:", temperature);
+    let temperature = await getTemperature();
     if (temperature === null) {
-        console.log("Error fetching temperature, turning relay ON for safety.");
+        logError("Error fetching temperature, turning relay ON for safety.");
         setRelay(true);
         return;
     }
-
+    temperature = temperature.toFixed(1);
+    logMessage("indoorTemp", temperature);
     const electricityPrice = await getElectricityPrice();
     let currentPrice = 0;
     if (electricityPrice === null) {
-        console.log("Error fetching electricity price, will use 0 as current price");
+        logError("Error fetching electricity price, will use 0 as current price");
     } else {
         //get current hour
         const now = new Date();
         const currentHour = now.getHours();
         currentPrice = electricityPrice[currentHour]?.total;
     }
-    console.log("Electricity price:", currentPrice);
+    logMessage("electricityPrice", currentPrice);
 
     let threshold = getProperty("threshold");
     if (currentPrice > THRESHOLD_PRICE_HIGH && currentPrice < THRESHOLD_PRICE_ULTRA_HIGH) {
@@ -34,15 +45,50 @@ async function main() {
         threshold += 4;
     }
 
-    console.log("Threshold:", threshold);
-    // Replace with actual logic for relay control
+    logMessage("threshold", threshold);
     const targetTemp = getProperty("targetTemp");
 
     if (temperature < targetTemp - threshold) {
         setRelay(true);
+        logMessage("relayValue", "ON",true);
     } else {
         setRelay(false);
+        logMessage("relayValue", "OFF", true);
     }
 }
 
-main();
+function log(message) {
+    console.log(new Date() + ": " + message);
+}
+function logError(message, err) {
+    console.error(new Date() + ": " + message, err);
+}
+
+function logMessageData(message) {
+    const logEntry = `${message}\n`;
+    try {
+        appendFileSync(DATA_FILE, logEntry);
+    } catch (err) {
+        logError('Error writing to log file:', err);
+    }
+}
+function logMessage(name, value, last) {
+    const logEntry = `{"name": "${name}", "value": "${value}"}${last ? "" : ","}\n`;
+    try {
+        appendFileSync(DATA_FILE, logEntry);
+    } catch (err) {
+        logError('Error writing to log file:', err);
+    }
+}
+
+async function run() {
+    clearLogFile();
+    logMessageData("{");
+    logMessageData('"data": [');
+    await main();
+    logMessageData("]}");
+}
+
+run().catch(err => {
+    logError("Error in main execution:", err);
+});

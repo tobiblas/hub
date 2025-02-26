@@ -1,0 +1,7 @@
+{
+"data": [
+{"name": "indoorTemp", "value": "23.4"},
+{"name": "electricityPrice", "value": "0.934"},
+{"name": "threshold", "value": "0.25"},
+{"name": "relayValue", "value": "OFF"}
+]}

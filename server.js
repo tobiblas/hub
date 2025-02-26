@@ -22,10 +22,10 @@ app.get("/data/:tab", async (req, res, next) => {
     }
 
     async function renderThermostat(res) {
-        const filePath = path.join(__dirname, "poolpump", "data.json");
+        const filePath = path.join(__dirname, "thermostat", "data.json");
         const data = await fs.promises.readFile(filePath, "utf8");
         const jsonData = JSON.parse(data);
-        res.render("poolpump", {jsonData});
+        res.render("thermostat", {jsonData});
     }
 
     try {
