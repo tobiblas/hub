@@ -1,7 +1,7 @@
 // Fetch data from the backend based on the selected tab
 async function fetchData(tab) {
     try {
-        const response = await fetch("http://" + /*window.location.hostname*/"localhost" + `:3000/data/${tab}`);
+        const response = await fetch("http://" + window.location.hostname + `:3000/data/${tab}`);
         const htmlContent = await response.text();
         if (htmlContent) {
             document.getElementById('tabContent').innerHTML = htmlContent;
