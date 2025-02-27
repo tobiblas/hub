@@ -1,8 +1,25 @@
 <div class="thermostat">
     <ul>
-        <% jsonData.data.forEach(property => { %>
-            <li><strong><%= property.name %></strong>: <%= property.value %></li>
-        <% }); %>
+        <% const indoorTemp = jsonData.data.find(item => item.name === 'indoorTemp')?.value || ''; %>
+        <% if (indoorTemp) { %>
+            <li><strong>Indoor temperature</strong>: <%= indoorTemp %>°C</li>
+        <% } %>
+        <% const targetTemp = jsonData.data.find(item => item.name === 'targetTemp')?.value || ''; %>
+        <% if (targetTemp) { %>
+            <li><strong>Target temperature</strong>: <%= targetTemp %>°C</li>
+        <% } %>
+        <% const elPrice = jsonData.data.find(item => item.name === 'electricityPrice')?.value || ''; %>
+        <% if (elPrice) { %>
+            <li><strong>Electricity price</strong>: <%= parseFloat(elPrice)?.toFixed(2) %>kr</li>
+        <% } %>
+        <% const threshold = jsonData.data.find(item => item.name === 'threshold')?.value || ''; %>
+        <% if (threshold) { %>
+            <li><strong>Temperature offset</strong>: <%= threshold %>°C</li>
+        <% } %>
+        <% const relayValue = jsonData.data.find(item => item.name === 'relayValue')?.value || ''; %>
+        <% if (relayValue) { %>
+            <li class="relay<%=relayValue%>"><strong>Heating status</strong>: <%= relayValue %></li>
+        <% } %>
     </ul>
     <div class="thermostatdate">last update <%= jsonData.date %></div>
 </div>

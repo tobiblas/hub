@@ -140,6 +140,14 @@ body {
 }
 
 /*THERMOSTAT*/
+.realyOFF {
+    color: #c13434;
+}
+
+.realyON {
+    color: #47af38;
+}
+
 .thermostat ul {
     list-style-type: none;
     padding: 0;
