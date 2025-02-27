@@ -3,6 +3,7 @@ const { getElectricityPrice } = require('../electricityPrice/getElectricityPrice
 const { setRelay, isRelayOn} = require('./relayController');
 const { getProperty } = require('../properties/properties');
 const { writeFileSync, appendFileSync} = require("fs");
+const { logError, log } = require("../common/logger");
 const path = require("path");
 
 const THRESHOLD_PRICE_HIGH = 2;
@@ -48,13 +49,6 @@ async function main() {
     }
     logMessage("threshold", threshold);
 
-    // if (temperature < targetTemp - threshold) {
-    //     setRelay(true);
-    //     logMessage("relayValue", "ON",true);
-    // } else {
-    //     setRelay(false);
-    //     logMessage("relayValue", "OFF", true);
-    // }
     const HYSTERESIS = 0.2; // 0.2 degrees difference between ON and OFF thresholds
 
     if (isRelayOn()) {
