@@ -18,6 +18,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 16px;
 }
 
 /* Main Container */
@@ -44,7 +45,7 @@ body {
     text-align: center;
     padding: 14px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1em;
     font-weight: 500;
     color: var(--tab-text-color);
     transition: all 0.3s ease-in-out;
@@ -78,7 +79,7 @@ body {
 .content {
     padding: 20px;
     text-align: center;
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: 400;
     line-height: 1.6;
     background: var(--container-bg-color);
@@ -148,9 +149,13 @@ body {
     color: #47af38;
 }
 
+.thermostatdate {
+    font-size: 0.75em;
+}
 .thermostat ul {
     list-style-type: none;
     padding: 0;
+    border-bottom: 1px solid #cecece;
 }
 .thermostat li {
     padding: 5px 0;
