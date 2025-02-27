@@ -165,7 +165,7 @@ clearLogFile();
 logMessage("{");
 logMessage('"properties": [');
 logMessage('{ "name": "SHELLY_IP", "value": "' + SHELLY_IP  + '"},');
-logMessage('{ "name": "MAX_PRICE (Don\'t turn on if price is above MAX_PRICE kr)", "value": "' + MAX_PRICE  + '"},');
+logMessage('{ "name": "MAX_PRICE", "value": "' + MAX_PRICE  + '"},');
 logMessage('{ "name": "OPEN_WEATHER_API_KEY", "value": "' + OPEN_WEATHER_API_KEY  + '"}');
 logMessage("],");
 //3. PRINT WEATHER DATA

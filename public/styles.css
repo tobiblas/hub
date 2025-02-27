@@ -103,11 +103,7 @@ body {
     padding: 0;
 }
 
-.poolpump .header,
-.poolpump .data {
-    margin-top: 20px;
-    border-bottom: 1px solid #333;
-    color: #333;
+.poolpump .header {
 }
 
 .poolpump ul {
@@ -149,14 +145,15 @@ body {
     color: #47af38;
 }
 
-.thermostatdate {
+.datefooter {
     font-size: 0.75em;
+    padding-top: 18px;
+    border-top: 1px solid #cecece;
 }
 .thermostat ul {
     list-style-type: none;
-    padding: 0;
     margin: 0;
-    border-bottom: 1px solid #cecece;
+    padding: 0 0 18px;
 }
 .thermostat li {
     padding: 5px 0;

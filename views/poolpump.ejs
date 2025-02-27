@@ -1,21 +1,23 @@
 <div class="poolpump">
-    <div class="data">Data - <%= jsonData.date %></div>
-    <ul>
-        <% jsonData.data.forEach(property => { %>
-            <li><strong><%= property.name %></strong>: <%= property.value %></li>
-        <% }); %>
-    </ul>
+    <div class="header">Schedule</div>
     <div class="maincontent">
         <ul>
-          <% jsonData.content.forEach(item => { %>
-            <li><%= item %></li>
-          <% }); %>
+            <% jsonData.content.forEach(item => { %>
+                <li><%= item %></li>
+            <% }); %>
         </ul>
     </div>
-    <div class="header">Properties</div>
     <ul>
-        <% jsonData.properties.forEach(property => { %>
-            <li><strong><%= property.name %></strong>: <%= property.value %></li>
-        <% }); %>
+        <% const season = jsonData.data.find(item => item.name === 'SEASON')?.value || ''; %>
+        <% const runTime = jsonData.data.find(item => item.name === 'PUMP RUN TIME (h)')?.value || ''; %>
+        <% const freezing = jsonData.data.find(item => item.name === 'FREEZE TODAY?')?.value || ''; %>
+        <% const maxPrice = jsonData.properties.find(item => item.name === 'MAX_PRICE')?.value || ''; %>
+        <li><strong>Season</strong>: <%= season %></li>
+        <li><strong>Pump run time</strong>: <%= runTime %>h</li>
+        <li><strong>Max price</strong>: <%= maxPrice %>kr</li>
+        <li><strong>Minus degrees today</strong>: <%= freezing ? "No" : "Yes" %></li>
+
     </ul>
+
+    <div class="datefooter">last update <%= jsonData.date %></div>
 </div>
