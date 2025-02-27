@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import {getElectricityPrice} from "../electricityPrice/getElectricityPrice.js";
 import {getProperty} from "../properties/properties.js";
+import * as logger from "../common/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,15 +22,8 @@ function clearLogFile() {
     try {
         writeFileSync(LOG_FILE, '', 'utf8');
     } catch (err) {
-        logError('Error clearing log file:', err);
+        logger.logError('Error clearing log file:', err);
     }
-}
-
-function log(message) {
-    console.log(new Date() + ": " + message);
-}
-function logError(message, err) {
-    console.error(new Date() + ": " + message, err);
 }
 
 function logMessage(message) {
@@ -37,7 +31,7 @@ function logMessage(message) {
     try {
         appendFileSync(LOG_FILE, logEntry);
     } catch (err) {
-        logError('Error writing to log file:', err);
+        logger.logError('Error writing to log file:', err);
     }
 }
 
@@ -56,7 +50,7 @@ async function fetchTibberPricesAndGetSchedule(hours, willFreeze) {
         // Filter out hours where price > MAX_PRICE unless it's freezing
         let validHours = willFreeze ? prices.filter(p => p.total <= MAX_PRICE) : prices;
         if (validHours.length === 0) {
-            logError("No valid hours found below the price limit.");
+            logger.logError("No valid hours found below the price limit.");
             return;
         }
 
@@ -93,7 +87,7 @@ async function fetchTibberPricesAndGetSchedule(hours, willFreeze) {
         return schedule;
 
     } catch (error) {
-        logError("Fetch error:", error);
+        logger.logError("Fetch error:", error);
     }
 }
 
@@ -102,9 +96,9 @@ async function controlShelly(action) {
     const url = `http://${SHELLY_IP}/relay/0?turn=${action}`;
     try {
         const response = await fetch(url);
-        log(`Shelly turned ${action}: ${response.status}`);
+        logger.log(`Shelly turned ${action}: ${response.status}`);
     } catch (error) {
-        logError(`Failed to turn ${action} Shelly:`, error);
+        logger.logError(`Failed to turn ${action} Shelly:`, error);
     }
 }
 
@@ -115,7 +109,7 @@ function scheduleShellyActions(schedule) {
     schedule.forEach(event => {
         let delay = event.timestamp - now;
         if (delay > 0) {
-            log(`Scheduling ${event.action} in ${delay / 1000} seconds`);
+            logger.log(`Scheduling ${event.action} in ${delay / 1000} seconds`);
             setTimeout(() => {
                 controlShelly(event.action);
             }, delay);
@@ -152,13 +146,13 @@ async function willItFreezeToday(apiKey) {
         const weatherData = await fetchHourlyWeather(LATITUDE, LONGITUDE, apiKey);
         return hasSubzeroTemperatures(weatherData);
     } catch (error) {
-        logError("Error:", error);
+        logger.logError("Error:", error);
         return false;
     }
 }
 
 const now = new Date();
-log("Starting pool pump script...");
+logger.log("Starting pool pump script...");
 let { season, hours } = getSeasonAndHours(now.getMonth() + 1);
 const willFreeze = await willItFreezeToday(OPEN_WEATHER_API_KEY);
 if (willFreeze) {
