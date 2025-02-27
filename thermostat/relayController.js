@@ -9,9 +9,9 @@ rpio.open(RELAY_GPIO_PIN, rpio.OUTPUT); // Open the pin without changing state
 function relayController(state) {
     const currentState = rpio.read(RELAY_GPIO_PIN);
     let turnOn = state === true;
-    if (turnOn && currentState === 0 || !turnOn && currentState === 1) {
+    if (turnOn && currentState === 1 || !turnOn && currentState === 0) {
         rpio.write(RELAY_GPIO_PIN, state ? rpio.LOW : rpio.HIGH);
-        log("Relay switched" + (state ? "ON" : "OFF"));
+        log("Relay switched " + (state ? "ON" : "OFF"));
     }
 }
 
