@@ -12,6 +12,10 @@ app.use(express.static('public'));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Folder for templates
 
+app.get("/", (req, res) => {
+    res.render("index", { version: Date.now() });
+});
+
 // Endpoint to get data for a specific tab
 app.get("/data/:tab", async (req, res, next) => {
     async function renderPoolPump(res) {
