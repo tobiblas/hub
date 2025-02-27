@@ -72,14 +72,6 @@ async function main() {
     }
 }
 
-function log(message) {
-    console.log(new Date() + ": " + message);
-}
-
-function logError(message, err) {
-    console.error(new Date() + ": " + message, err);
-}
-
 function logMessageData(message) {
     const logEntry = `${message}\n`;
     try {
