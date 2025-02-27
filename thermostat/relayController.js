@@ -15,4 +15,9 @@ function relayController(state) {
     }
 }
 
-module.exports = { setRelay: relayController };
+function isRelayOn() {
+    return rpio.read(RELAY_GPIO_PIN) === rpio.LOW;
+}
+
+module.exports = { setRelay: relayController,
+    isRelayOn };

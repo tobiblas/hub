@@ -1,6 +1,6 @@
 const { getTemperature } = require('./getTemperature');
 const { getElectricityPrice } = require('../electricityPrice/getElectricityPrice');
-const { setRelay } = require('./relayController');
+const { setRelay, isRelayOn} = require('./relayController');
 const { getProperty } = require('../properties/properties');
 const { writeFileSync, appendFileSync} = require("fs");
 const path = require("path");
@@ -48,18 +48,40 @@ async function main() {
     }
     logMessage("threshold", threshold);
 
-    if (temperature < targetTemp - threshold) {
-        setRelay(true);
-        logMessage("relayValue", "ON",true);
+    // if (temperature < targetTemp - threshold) {
+    //     setRelay(true);
+    //     logMessage("relayValue", "ON",true);
+    // } else {
+    //     setRelay(false);
+    //     logMessage("relayValue", "OFF", true);
+    // }
+    const HYSTERESIS = 0.2; // 0.2 degrees difference between ON and OFF thresholds
+
+    if (isRelayOn()) {
+        // If relay is ON, use upper threshold to turn OFF
+        if (temperature >= targetTemp - threshold + HYSTERESIS) {
+            setRelay(false);
+            logMessage("relayValue", "OFF", true);
+        } else {
+            setRelay(true);
+            logMessage("relayValue", "ON", true);
+        }
     } else {
-        setRelay(false);
-        logMessage("relayValue", "OFF", true);
+        // If relay is OFF, use lower threshold to turn ON
+        if (temperature < targetTemp - threshold - HYSTERESIS) {
+            setRelay(true);
+            logMessage("relayValue", "ON", true);
+        } else {
+            setRelay(false);
+            logMessage("relayValue", "OFF", true);
+        }
     }
 }
 
 function log(message) {
     console.log(new Date() + ": " + message);
 }
+
 function logError(message, err) {
     console.error(new Date() + ": " + message, err);
 }
@@ -82,12 +104,21 @@ function logMessage(name, value, last) {
 }
 
 async function run() {
+    const now = new Date();
+    const formattedDate = now.toLocaleString('sv-SE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    }).replace(',', '');
     clearLogFile();
     logMessageData("{");
     logMessageData('"data": [');
     await main();
     logMessageData("],");
-    logMessageData('"date": "' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '"}');
+    logMessageData('"date": "' + formattedDate + '"}');
 }
 
 run().catch(err => {
