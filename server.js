@@ -12,6 +12,17 @@ app.use(express.static('public'));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Folder for templates
 
+app.post("/save-config", async (req, res, next) => {
+    try {
+        const configData = req.body;
+        const filePath = path.join(__dirname, "properties", "config.txt");
+        await fs.promises.writeFile(filePath, JSON.stringify(configData, null, 2), "utf8");
+        res.redirect("/data/config"); // Redirect back to the config page
+    } catch (err) {
+        next(err); // Pass the error to the global error handler
+    }
+});
+
 // Endpoint to get data for a specific tab
 app.get("/data/:tab", async (req, res, next) => {
     async function renderPoolPump(res) {

@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-<h2>Configuration</h2>
+<div class="header">Configuration</div>
 <form action="/save-config" method="POST">
     <table>
         <thead>
@@ -25,11 +25,11 @@
         </tr>
         </thead>
         <tbody>
-        <% for (const key in jsonData.config) { %>
+        <% for (const key in jsonData) { %>
             <tr>
                 <td><%= key %></td>
-                <td>
-                    <input type="text" name="<%= key %>" value="<%= config[key] %>">
+                <td class="configtd">
+                    <input class="configinput" type="text" name="<%= key %>" value="<%= jsonData[key] %>">
                 </td>
             </tr>
         <% } %>
