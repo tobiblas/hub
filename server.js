@@ -28,6 +28,13 @@ app.get("/data/:tab", async (req, res, next) => {
         res.render("thermostat", {jsonData});
     }
 
+    async function renderConfig(res) {
+        const filePath = path.join(__dirname, "properties", "config.txt");
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const jsonData = JSON.parse(data);
+        res.render("config", {jsonData});
+    }
+
     try {
         const tabName = req.params.tab;
 
@@ -35,6 +42,8 @@ app.get("/data/:tab", async (req, res, next) => {
             await renderThermostat(res);
         } else if (tabName === "poolpump") {
             await renderPoolPump(res);
+        } else if (tabName === "config") {
+            await renderConfig(res);
         }
     } catch (err) {
         next(err); // Pass the error to the global error handler

@@ -1,10 +1,7 @@
 
-THERMOSTATEN
-
-* Installera UI-lös variant och testa att det fungerar.
-* I samband med detta validera att poolpumpen funkar med nya delade koden.
-
-* Fixa UI där man kan ändra Properties samt se data om termostaten
+* fixa så det inte blir error då och då. Extra json file som vi byter ut.
+* Fixa UI där man kan ändra Properties
 
 Fixa pool lights. 
 
+graf för pool pumpen?

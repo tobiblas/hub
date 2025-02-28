@@ -2,17 +2,18 @@ const { getTemperature } = require('./getTemperature');
 const { getElectricityPrice } = require('../electricityPrice/getElectricityPrice');
 const { setRelay, isRelayOn} = require('./relayController');
 const { getProperty } = require('../properties/properties');
-const { writeFileSync, appendFileSync} = require("fs");
+const { writeFileSync, appendFileSync, renameSync } = require("fs");
 const { logError, log } = require("../common/logger");
 const path = require("path");
 
 const THRESHOLD_PRICE_HIGH = 2;
 const THRESHOLD_PRICE_ULTRA_HIGH = 5;
 const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_FILE_TMP = path.join(__dirname, 'data.json_tmp');
 
 function clearLogFile() {
     try {
-        writeFileSync(DATA_FILE, '', 'utf8');
+        writeFileSync(DATA_FILE_TMP, '', 'utf8');
     } catch (err) {
         logError('Error clearing log file:', err);
     }
@@ -75,7 +76,7 @@ async function main() {
 function logMessageData(message) {
     const logEntry = `${message}\n`;
     try {
-        appendFileSync(DATA_FILE, logEntry);
+        appendFileSync(DATA_FILE_TMP, logEntry);
     } catch (err) {
         logError('Error writing to log file:', err);
     }
@@ -83,15 +84,22 @@ function logMessageData(message) {
 function logMessage(name, value, last) {
     const logEntry = `{"name": "${name}", "value": "${value}"}${last ? "" : ","}\n`;
     try {
-        appendFileSync(DATA_FILE, logEntry);
+        appendFileSync(DATA_FILE_TMP, logEntry);
     } catch (err) {
         logError('Error writing to log file:', err);
     }
 }
 
+function moveFile() {
+    try {
+        renameSync(DATA_FILE_TMP, DATA_FILE);
+    } catch (err) {
+        logError('Error moving log file:', err);
+    }
+}
+
 async function run() {
-    const now = new Date();
-    const formattedDate = now.toLocaleString('sv-SE', {
+    const formattedDate = new Date().toLocaleString('sv-SE', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -105,6 +113,7 @@ async function run() {
     await main();
     logMessageData("],");
     logMessageData('"date": "' + formattedDate + '"}');
+    moveFile();
 }
 
 run().catch(err => {
