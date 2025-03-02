@@ -21,7 +21,7 @@ function clearLogFile() {
 
 async function main() {
     let temperature = await getTemperature();
-    if (temperature === null) {
+    if (temperature) {
         logError("Error fetching temperature, turning relay ON for safety.");
         setRelay(true);
         return;

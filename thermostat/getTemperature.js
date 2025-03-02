@@ -22,6 +22,7 @@ async function getTemperatureWithRetry(retries = 0) {
         await new Promise(resolve => setTimeout(resolve, retryDelay));
         return getTemperatureWithRetry(retries + 1);
     }
+    return null;
 }
 
 module.exports = { getTemperature: getTemperatureWithRetry };

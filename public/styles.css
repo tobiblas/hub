@@ -5,7 +5,6 @@
     --tab-text-color: #FFF;
     --accent-color: #347c6a;
     --tab-hover-bg: #2e7161;
-    --tab-active-underline: #c14b4b;
     --tab-bg-color: #347c6a;
     --container-bg-color: #FFF;
 }
@@ -70,9 +69,10 @@ body {
     left: 50%;
     width: 50%;
     height: 3px;
-    background: var(--tab-active-underline);
+    background: var(--primary-color);
     border-radius: 2px;
     transform: translateX(-50%);
+    bottom: 5px;
 }
 
 /* Content Box */
