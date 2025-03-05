@@ -1,6 +1,8 @@
 {
   "targetTemp": "21.7",
-  "threshold": "0.25",
   "maxPriceForPoolPump": "2",
-  "thermometerRaspberryIP": "192.168.1.232"
+  "poolLightsOffTime": "23:00",
+  "thermometerRaspberryIP": "192.168.1.232",
+  "poolPumpIP": "192.168.1.216",
+  "poolLightsIP": "192.168.1.218
 }

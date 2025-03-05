@@ -1,6 +1,6 @@
 const { getTemperature } = require('./getTemperature');
 const { getElectricityPrice } = require('../electricityPrice/getElectricityPrice');
-const { setRelay, isRelayOn} = require('./relayController');
+const { setRelay, isRelayOn} = require('../common/relayController');
 const { getProperty } = require('../properties/properties');
 const { writeFileSync, appendFileSync, renameSync } = require("fs");
 const { logError, log } = require("../common/logger");
@@ -42,7 +42,7 @@ async function main() {
     }
     logMessage("electricityPrice", currentPrice);
 
-    let threshold = getProperty("threshold");
+    let threshold = 0;
     if (currentPrice > THRESHOLD_PRICE_HIGH && currentPrice < THRESHOLD_PRICE_ULTRA_HIGH) {
         threshold += 1;
     } else if (currentPrice >= THRESHOLD_PRICE_ULTRA_HIGH) {

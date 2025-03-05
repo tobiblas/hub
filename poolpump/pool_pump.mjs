@@ -7,11 +7,12 @@ import path from 'path';
 import {getElectricityPrice} from "../electricityPrice/getElectricityPrice.js";
 import {getProperty} from "../properties/properties.js";
 import * as logger from "../common/logger.js";
+import { controlShelly } from "../common/shellyController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SHELLY_IP = "192.168.1.216";
+const SHELLY_IP = getProperty("poolPumpIP");
 const MAX_PRICE = getProperty("maxPriceForPoolPump"); // Don't turn on if price is above 2 kr
 const OPEN_WEATHER_API_KEY = getProperty("OPEN_WEATHER_API_KEY", true);
 const LATITUDE = 55.61024170239335;
@@ -91,17 +92,6 @@ async function fetchTibberPricesAndGetSchedule(hours, willFreeze) {
     }
 }
 
-// Function to send HTTP request to Shelly device
-async function controlShelly(action) {
-    const url = `http://${SHELLY_IP}/relay/0?turn=${action}`;
-    try {
-        const response = await fetch(url);
-        logger.log(`Shelly turned ${action}: ${response.status}`);
-    } catch (error) {
-        logger.logError(`Failed to turn ${action} Shelly:`, error);
-    }
-}
-
 // Function to schedule ON/OFF actions
 function scheduleShellyActions(schedule) {
     const now = Date.now();
@@ -111,7 +101,7 @@ function scheduleShellyActions(schedule) {
         if (delay > 0) {
             logger.log(`Scheduling ${event.action} in ${delay / 1000} seconds`);
             setTimeout(() => {
-                controlShelly(event.action);
+                controlShelly(event.action, SHELLY_IP);
             }, delay);
         }
     });

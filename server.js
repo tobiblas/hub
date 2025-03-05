@@ -46,6 +46,13 @@ app.get("/data/:tab", async (req, res, next) => {
         res.render("config", {jsonData});
     }
 
+    async function renderPoolLights(res) {
+        const filePath = path.join(__dirname, "properties", "config.txt");
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const jsonData = JSON.parse(data);
+        res.render("poollights", {jsonData});
+    }
+
     try {
         const tabName = req.params.tab;
 
@@ -55,6 +62,8 @@ app.get("/data/:tab", async (req, res, next) => {
             await renderPoolPump(res);
         } else if (tabName === "config") {
             await renderConfig(res);
+        } else if (tabName === "poollights") {
+            await renderPoolLights(res);
         }
     } catch (err) {
         next(err); // Pass the error to the global error handler

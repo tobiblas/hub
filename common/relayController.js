@@ -1,4 +1,4 @@
-const { logError, log } = require("../common/logger");
+const { logError, log } = require("./logger");
 const rpio = require('rpio');
 
 const RELAY_GPIO_PIN = 4;
