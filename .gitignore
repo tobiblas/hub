@@ -6,6 +6,7 @@ node_modules/
 .idea/
 hub.iml
 
+properties/config.txt
 properties/secrets.txt
 poolpump/data.json
 thermostat/data.json
