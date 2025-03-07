@@ -9,3 +9,4 @@ hub.iml
 properties/secrets.txt
 poolpump/data.json
 thermostat/data.json
+poollights/data.json

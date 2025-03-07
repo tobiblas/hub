@@ -1,0 +1,10 @@
+<div class="poolpump">
+    <div class="header">Schedule</div>
+    <ul>
+        <% const on = jsonData.data.find(item => item.name === 'onString')?.value || ''; %>
+        <% const off = jsonData.data.find(item => item.name === 'offString')?.value || ''; %>
+        <li><strong>ON</strong>: <%= on %></li>
+        <li><strong>OFF</strong>: <%= off %></li>
+    </ul>
+    <div class="datefooter">last update <%= jsonData.date %></div>
+</div>

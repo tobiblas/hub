@@ -47,7 +47,7 @@ app.get("/data/:tab", async (req, res, next) => {
     }
 
     async function renderPoolLights(res) {
-        const filePath = path.join(__dirname, "properties", "config.txt");
+        const filePath = path.join(__dirname, "poollights", "data.json");
         const data = await fs.promises.readFile(filePath, "utf8");
         const jsonData = JSON.parse(data);
         res.render("poollights", {jsonData});

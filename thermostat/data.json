@@ -1,9 +1,0 @@
-{
-"data": [
-{"name": "indoorTemp", "value": "21.8"},
-{"name": "targetTemp", "value": "21.7"},
-{"name": "electricityPrice", "value": "0.9527"},
-{"name": "threshold", "value": "0.25"},
-{"name": "relayValue", "value": "OFF"}
-],
-"date": "2025-02-28 14:42"}
