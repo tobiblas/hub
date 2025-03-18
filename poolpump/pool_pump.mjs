@@ -147,6 +147,7 @@ let { season, hours } = getSeasonAndHours(now.getMonth() + 1);
 const willFreeze = await willItFreezeToday(OPEN_WEATHER_API_KEY);
 if (willFreeze) {
     hours = hours + 3;
+    logger.log("It will freeze today, increasing pump runtime (+3h). New value: " + hours);
 }
 
 //1. CREATE LOG FILE.

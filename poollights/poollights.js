@@ -66,7 +66,7 @@ function getPoolLightsOffTime(timeString) {
 }
 
 // Function to schedule the lights to turn off
-function scheduleTurnOff(millisUntilTurnOffTime, poolLightsOffTimeString) {
+function scheduleTurnOff(millisUntilTurnOffTime, poolLightsOffTimeString, maxReschedules = 1) {
     const now = Date.now();
 
     // If there's already a timeout scheduled, cancel it and log the action
@@ -80,10 +80,13 @@ function scheduleTurnOff(millisUntilTurnOffTime, poolLightsOffTimeString) {
     turnOffTimeout = setTimeout(() => {
         // Re-check if the off time has changed at the time of execution
         const currentOffTimeString = getProperty("poolLightsOffTime");
-        if (currentOffTimeString !== poolLightsOffTimeString) {
+        if (currentOffTimeString !== poolLightsOffTimeString && maxReschedules > 0) {
+            const poolLightsOffTime = getPoolLightsOffTime(currentOffTimeString);
+            const turnOffTime = poolLightsOffTime.getTime();
+
             log('Pool lights off time has changed. Rescheduling...');
             // If the time has changed, reschedule the turning off action with the new time
-            scheduleTurnOff(currentOffTimeString); // Reschedule with the new time
+            scheduleTurnOff(turnOffTime, currentOffTimeString, maxReschedules - 1); // Reschedule with the new time
             return; // Exit the current timeout action
         }
         controlShelly("off", SHELLY_IP);
@@ -98,7 +101,6 @@ async function scheduleLights() {
     try {
         const sunsetTime = await getSunsetTime();
         const poolLightsOffTimeString = getProperty("poolLightsOffTime"); // This will be something like "22:30"
-
         log(`Sunset time today is: ${sunsetTime}`);
         log(`Pool lights off time today is: ${poolLightsOffTimeString}`);
 
@@ -144,7 +146,7 @@ async function scheduleLights() {
         }, turnOnTime - Date.now());
 
         // Schedule the lights to turn off at the specified poolLightsOffTime
-        scheduleTurnOff(turnOffTime, poolLightsOffTime);
+        scheduleTurnOff(turnOffTime, poolLightsOffTimeString);
     } catch (error) {
         logError('Error scheduling lights: ' + error.message);
     }
